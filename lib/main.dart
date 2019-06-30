@@ -16,6 +16,7 @@ class _StoreListPageState extends State<StoreListPage> {
 
   @override
   void initState() {
+    super.initState();
     _fetchData();
   }
 
