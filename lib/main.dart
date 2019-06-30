@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:shimmer/shimmer.dart';
 import 'package:taipei_zoo_20190630/store_list_data.dart';
 
 void main() => runApp(StoreListPage());
@@ -45,7 +46,7 @@ class _StoreListPageState extends State<StoreListPage> {
       case PAGE_EMPTY:
         return getEmptyContent();
       case PAGE_LOADING:
-        return Text("loading");
+        return getLoadingContent();
       case PAGE_OK:
         return _getStoreList();
       case PAGE_ERROR:
@@ -163,7 +164,6 @@ class _StoreListPageState extends State<StoreListPage> {
     );
   }
 
-
   Widget getEmptyContent() {
     return Container(
         color: Colors.grey.shade200,
@@ -203,5 +203,68 @@ class _StoreListPageState extends State<StoreListPage> {
             ),
           ],
         ));
+  }
+
+  Widget getLoadingContent() {
+    Widget item = Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        child: Row(children: <Widget>[
+          Container(
+            color: Colors.white,
+            width: 80,
+            height: 80,
+          ),
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.only(left: 12, right: 8),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Container(
+                    color: Colors.white,
+                    width: 100,
+                    height: 12,
+                  ),
+                  SizedBox(height: 8),
+                  Container(
+                    color: Colors.white,
+                    width: 300,
+                    height: 12,
+                  ),
+                  SizedBox(height: 8),
+                  Container(
+                    color: Colors.white,
+                    width: 300,
+                    height: 12,
+                  ),
+                  SizedBox(height: 8),
+                  Container(
+                    color: Colors.white,
+                    width: 140,
+                    height: 12,
+                  ),
+                ],
+              ),
+            ),
+          ),
+          Icon(Icons.arrow_forward_ios),
+        ]));
+
+    return Shimmer.fromColors(
+      baseColor: Colors.grey.shade300,
+      highlightColor: Colors.white70,
+      child: Column(
+        children: <Widget>[
+          SizedBox(
+            height: 16,
+          ),
+          item,
+          item,
+          item,
+          item,
+          item,
+        ],
+      ),
+    );
   }
 }
