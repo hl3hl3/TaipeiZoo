@@ -29,11 +29,26 @@ class StoreListPage extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      Text('標題'),
+                      Text(
+                        '標題最多1行過長變點點點標題最多1行過長變點點點',
+                        style: TextStyle(fontSize: 18),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
                       SizedBox(height: 8),
-                      Text('說明'),
+                      Text(
+                        '說明最多2行過長變點點點說明最多2行過長變點點點說明最多2行過長變點點點',
+                        style: TextStyle(fontSize: 14),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                      ),
                       SizedBox(height: 8),
-                      Text('時間'),
+                      Text(
+                        '時間最多1行過長變點點點時間最多1行過長變點點點',
+                        style: TextStyle(fontSize: 14),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
                     ],
                   ),
                 ),
