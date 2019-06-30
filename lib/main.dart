@@ -5,10 +5,20 @@ import 'package:http/http.dart' as http;
 
 void main() => runApp(StoreListPage());
 
-class StoreListPage extends StatelessWidget {
+class StoreListPage extends StatefulWidget {
+  @override
+  _StoreListPageState createState() => _StoreListPageState();
+}
+
+class _StoreListPageState extends State<StoreListPage> {
+
+  @override
+  void initState() {
+    _fetchData();
+  }
+
   @override
   Widget build(BuildContext context) {
-    _fetchData();
     return MaterialApp(
       title: "Taipei Zoo",
       home: Scaffold(
