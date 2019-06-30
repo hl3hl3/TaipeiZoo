@@ -12,8 +12,7 @@ class StoreListPage extends StatefulWidget {
 }
 
 class _StoreListPageState extends State<StoreListPage> {
-
-  StoreListResponse _responseData = null;
+  StoreListResponse _responseData;
 
   @override
   void initState() {
@@ -35,7 +34,8 @@ class _StoreListPageState extends State<StoreListPage> {
   }
 
   _fetchData() async {
-    var url = 'https://data.taipei/opendata/datalist/apiAccess?scope=resourceAquire&rid=5a0e5fbb-72f8-41c6-908e-2fb25eff9b8a';
+    var url =
+        'https://data.taipei/opendata/datalist/apiAccess?scope=resourceAquire&rid=5a0e5fbb-72f8-41c6-908e-2fb25eff9b8a';
     var response = await http.get(url);
     print('Response status: ${response.statusCode}');
     var resultUtf8 = Utf8Decoder().convert(response.bodyBytes);
@@ -55,22 +55,29 @@ class _StoreListPageState extends State<StoreListPage> {
         );
       },
       itemBuilder: (BuildContext context, int index) {
-        var storeImageUrl =
-            "https://upload.wikimedia.org/wikipedia/commons/thumb/6/66/An_up-close_picture_of_a_curious_male_domestic_shorthair_tabby_cat.jpg/440px-An_up-close_picture_of_a_curious_male_domestic_shorthair_tabby_cat.jpg";
-        var storeTitle = '標題最多1行過長變點點點標題最多1行過長變點點點';
-        var storeInfo = '說明最多2行過長變點點點說明最多2行過長變點點點說明最多2行過長變點點點';
-        var storeMemo = '時間最多1行過長變點點點時間最多1行過長變點點點';
-        if(_responseData != null) {
+        var storeImageUrl;
+        var storeTitle = '';
+        var storeInfo = '';
+        var storeMemo = '';
+        if (_responseData != null) {
           StoreListItem itemData = _responseData.result.results[index];
           storeImageUrl = itemData.ePicURL;
           storeTitle = itemData.eName;
           storeInfo = itemData.eInfo;
-          storeMemo = itemData.eMemo;
+          storeMemo = itemData.eMemo == null || itemData.eMemo == ''
+              ? "無休館資訊"
+              : itemData.eMemo;
         }
-        var storeImage = Image.network(
-          storeImageUrl,
-          width: 120,
-        );
+        Widget storeImage;
+        if (storeImageUrl != null && storeImageUrl.startsWith("http")) {
+          storeImage = Image.network(
+            storeImageUrl,
+            width: 120,
+          );
+        } else {
+          storeImage = CircularProgressIndicator();
+        }
+
         return Row(
           children: <Widget>[
             Padding(
