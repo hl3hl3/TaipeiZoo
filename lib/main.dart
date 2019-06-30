@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:taipei_zoo_20190630/store_list_data.dart';
 
 void main() => runApp(StoreListPage());
 
@@ -11,6 +12,8 @@ class StoreListPage extends StatefulWidget {
 }
 
 class _StoreListPageState extends State<StoreListPage> {
+
+  StoreListResponse _responseData = null;
 
   @override
   void initState() {
@@ -37,6 +40,10 @@ class _StoreListPageState extends State<StoreListPage> {
     print('Response status: ${response.statusCode}');
     var resultUtf8 = Utf8Decoder().convert(response.bodyBytes);
     print('Response body resultUtf8: ${resultUtf8}');
+    Map<String, dynamic> jsonMap = jsonDecode(resultUtf8);
+    setState(() {
+      _responseData = StoreListResponse.fromJson(jsonMap);
+    });
   }
 
   ListView _getStoreList() {
@@ -50,13 +57,20 @@ class _StoreListPageState extends State<StoreListPage> {
       itemBuilder: (BuildContext context, int index) {
         var storeImageUrl =
             "https://upload.wikimedia.org/wikipedia/commons/thumb/6/66/An_up-close_picture_of_a_curious_male_domestic_shorthair_tabby_cat.jpg/440px-An_up-close_picture_of_a_curious_male_domestic_shorthair_tabby_cat.jpg";
+        var storeTitle = '標題最多1行過長變點點點標題最多1行過長變點點點';
+        var storeInfo = '說明最多2行過長變點點點說明最多2行過長變點點點說明最多2行過長變點點點';
+        var storeMemo = '時間最多1行過長變點點點時間最多1行過長變點點點';
+        if(_responseData != null) {
+          StoreListItem itemData = _responseData.result.results[index];
+          storeImageUrl = itemData.ePicURL;
+          storeTitle = itemData.eName;
+          storeInfo = itemData.eInfo;
+          storeMemo = itemData.eMemo;
+        }
         var storeImage = Image.network(
           storeImageUrl,
           width: 120,
         );
-        var storeTitle = '標題最多1行過長變點點點標題最多1行過長變點點點';
-        var storeInfo = '說明最多2行過長變點點點說明最多2行過長變點點點說明最多2行過長變點點點';
-        var storeMemo = '時間最多1行過長變點點點時間最多1行過長變點點點';
         return Row(
           children: <Widget>[
             Padding(
