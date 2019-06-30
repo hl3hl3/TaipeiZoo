@@ -11,8 +11,14 @@ class StoreListPage extends StatefulWidget {
   _StoreListPageState createState() => _StoreListPageState();
 }
 
+const int PAGE_EMPTY = 0;
+const int PAGE_LOADING = 1;
+const int PAGE_OK = 2;
+const int PAGE_ERROR = 3;
+
 class _StoreListPageState extends State<StoreListPage> {
   StoreListResponse _responseData;
+  int _pageState = PAGE_EMPTY;
 
   @override
   void initState() {
@@ -29,21 +35,54 @@ class _StoreListPageState extends State<StoreListPage> {
           leading: Icon(Icons.menu),
           title: Text("台北市立動物園"),
         ),
-        body: _getStoreList(),
+        body: _getPageBody(),
       ),
     );
   }
 
+  Widget _getPageBody() {
+    switch (_pageState) {
+      case PAGE_EMPTY:
+        return Text("empty");
+      case PAGE_LOADING:
+        return Text("loading");
+      case PAGE_OK:
+        return _getStoreList();
+      case PAGE_ERROR:
+      default:
+        return Text("error");
+    }
+  }
+
   _fetchData() async {
+    setState(() {
+      _pageState = PAGE_LOADING;
+    });
     var url =
         'https://data.taipei/opendata/datalist/apiAccess?scope=resourceAquire&rid=5a0e5fbb-72f8-41c6-908e-2fb25eff9b8a';
     var response = await http.get(url);
     print('Response status: ${response.statusCode}');
-    var resultUtf8 = Utf8Decoder().convert(response.bodyBytes);
-    print('Response body resultUtf8: ${resultUtf8}');
-    Map<String, dynamic> jsonMap = jsonDecode(resultUtf8);
+
+    if (response.statusCode == 200) {
+      try {
+        String resultUtf8 = Utf8Decoder().convert(response.bodyBytes);
+        print('Response body resultUtf8: ${resultUtf8}');
+        Map<String, dynamic> jsonMap = jsonDecode(resultUtf8);
+        setState(() {
+          _responseData = StoreListResponse.fromJson(jsonMap);
+          _pageState = PAGE_OK;
+        });
+      } on FormatException catch (e) {
+        setErrorState();
+      }
+    } else {
+      setErrorState();
+    }
+  }
+
+  void setErrorState() {
     setState(() {
-      _responseData = StoreListResponse.fromJson(jsonMap);
+      _pageState = PAGE_ERROR;
     });
   }
 
