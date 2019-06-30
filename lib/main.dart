@@ -12,8 +12,11 @@ class StoreListPage extends StatelessWidget {
           leading: Icon(Icons.menu),
           title: Text("台北市立動物園"),
         ),
-        body: ListView.builder(
+        body: ListView.separated(
           itemCount: 10,
+          separatorBuilder: (BuildContext context, int index) {
+            return Divider(height: 2,);
+          },
           itemBuilder: (BuildContext context, int index) {
             return Row(
               children: <Widget>[
