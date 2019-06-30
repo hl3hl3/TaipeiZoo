@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shimmer/shimmer.dart';
+import 'package:taipei_zoo_20190630/store_detail_page.dart';
 import 'package:taipei_zoo_20190630/store_list_data.dart';
 
 void main() => runApp(StoreListPage());
@@ -109,76 +110,93 @@ class _StoreListPageState extends State<StoreListPage> {
         mainAxisSpacing: 4,
       ),
       itemBuilder: (BuildContext context, int index) {
-        var storeImageUrl;
-        var storeTitle = '';
-        var storeInfo = '';
-        var storeMemo = '';
-        if (_responseData != null) {
-          StoreListItem itemData = _responseData.result.results[index];
-          storeImageUrl = itemData.ePicURL;
-          storeTitle = itemData.eName;
-          storeInfo = itemData.eInfo;
-          storeMemo = itemData.eMemo == null || itemData.eMemo == ''
-              ? "無休館資訊"
-              : itemData.eMemo;
-        }
-        Widget storeImage;
-        if (storeImageUrl != null && storeImageUrl.startsWith("http")) {
-          storeImage = Image.network(
-            storeImageUrl,
-            width: 120,
-            height: 120,
-            fit: BoxFit.cover,
-          );
-        } else {
-          storeImage = CircularProgressIndicator();
-        }
-
-        return Card(
-          elevation: 4,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8),
-          ),
-          clipBehavior: Clip.antiAlias,
-          child: Column(
-            children: <Widget>[
-              AspectRatio(
-                aspectRatio: 1.5,
-                child: storeImage,
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Text(
-                      storeTitle,
-                      style: TextStyle(fontSize: 18),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    SizedBox(height: 8),
-                    Text(
-                      storeInfo,
-                      style: TextStyle(fontSize: 14),
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    SizedBox(height: 8),
-                    Text(
-                      storeMemo,
-                      style: TextStyle(fontSize: 14),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
+        return GestureDetector(
+          onTap: () {
+            _showDetailPage(context, _responseData.result.results[index]);
+          },
+          child: _getStoreGridItem(index),
         );
       },
     );
+  }
+
+  Card _getStoreGridItem(int index) {
+    var storeImageUrl;
+    var storeTitle = '';
+    var storeInfo = '';
+    var storeMemo = '';
+    if (_responseData != null) {
+      StoreListItem itemData = _responseData.result.results[index];
+      storeImageUrl = itemData.ePicURL;
+      storeTitle = itemData.eName;
+      storeInfo = itemData.eInfo;
+      storeMemo = itemData.eMemo == null || itemData.eMemo == ''
+          ? "無休館資訊"
+          : itemData.eMemo;
+    }
+    Widget storeImage;
+    if (storeImageUrl != null && storeImageUrl.startsWith("http")) {
+      storeImage = Image.network(
+        storeImageUrl,
+        width: 120,
+        height: 120,
+        fit: BoxFit.cover,
+      );
+    } else {
+      storeImage = CircularProgressIndicator();
+    }
+
+    return Card(
+      elevation: 4,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(8),
+      ),
+      clipBehavior: Clip.antiAlias,
+      child: Column(
+        children: <Widget>[
+          AspectRatio(
+            aspectRatio: 1.5,
+            child: storeImage,
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Text(
+                  storeTitle,
+                  style: TextStyle(fontSize: 18),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                SizedBox(height: 8),
+                Text(
+                  storeInfo,
+                  style: TextStyle(fontSize: 14),
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                SizedBox(height: 8),
+                Text(
+                  storeMemo,
+                  style: TextStyle(fontSize: 14),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  _showDetailPage(BuildContext context, StoreListItem itemData) {
+    Navigator.of(context).push(MaterialPageRoute(
+      builder: (context) {
+        return StoreDetailPage(itemData);
+      },
+    ));
   }
 
   ListView _getStoreList() {
@@ -190,71 +208,79 @@ class _StoreListPageState extends State<StoreListPage> {
         );
       },
       itemBuilder: (BuildContext context, int index) {
-        var storeImageUrl;
-        var storeTitle = '';
-        var storeInfo = '';
-        var storeMemo = '';
-        if (_responseData != null) {
-          StoreListItem itemData = _responseData.result.results[index];
-          storeImageUrl = itemData.ePicURL;
-          storeTitle = itemData.eName;
-          storeInfo = itemData.eInfo;
-          storeMemo = itemData.eMemo == null || itemData.eMemo == ''
-              ? "無休館資訊"
-              : itemData.eMemo;
-        }
-        Widget storeImage;
-        if (storeImageUrl != null && storeImageUrl.startsWith("http")) {
-          storeImage = Image.network(
-            storeImageUrl,
-            width: 120,
-            height: 120,
-            fit: BoxFit.cover,
-          );
-        } else {
-          storeImage = CircularProgressIndicator();
-        }
-
-        return Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-          child: Row(
-            children: <Widget>[
-              storeImage,
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 12, right: 8),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Text(
-                        storeTitle,
-                        style: TextStyle(fontSize: 18),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      SizedBox(height: 8),
-                      Text(
-                        storeInfo,
-                        style: TextStyle(fontSize: 14),
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      SizedBox(height: 8),
-                      Text(
-                        storeMemo,
-                        style: TextStyle(fontSize: 14),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              Icon(Icons.arrow_forward_ios),
-            ],
-          ),
-        );
+        return GestureDetector(
+            onTap: () {
+              _showDetailPage(context, _responseData.result.results[index]);
+            },
+            child: _getStoreListItem(context, index));
       },
+    );
+  }
+
+  Widget _getStoreListItem(BuildContext context, int index) {
+    var storeImageUrl;
+    var storeTitle = '';
+    var storeInfo = '';
+    var storeMemo = '';
+    if (_responseData != null) {
+      StoreListItem itemData = _responseData.result.results[index];
+      storeImageUrl = itemData.ePicURL;
+      storeTitle = itemData.eName;
+      storeInfo = itemData.eInfo;
+      storeMemo = itemData.eMemo == null || itemData.eMemo == ''
+          ? "無休館資訊"
+          : itemData.eMemo;
+    }
+    Widget storeImage;
+    if (storeImageUrl != null && storeImageUrl.startsWith("http")) {
+      storeImage = Image.network(
+        storeImageUrl,
+        width: 120,
+        height: 120,
+        fit: BoxFit.cover,
+      );
+    } else {
+      storeImage = CircularProgressIndicator();
+    }
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      child: Row(
+        children: <Widget>[
+          storeImage,
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.only(left: 12, right: 8),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Text(
+                    storeTitle,
+                    style: TextStyle(fontSize: 18),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  SizedBox(height: 8),
+                  Text(
+                    storeInfo,
+                    style: TextStyle(fontSize: 14),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  SizedBox(height: 8),
+                  Text(
+                    storeMemo,
+                    style: TextStyle(fontSize: 14),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ],
+              ),
+            ),
+          ),
+          Icon(Icons.arrow_forward_ios),
+        ],
+      ),
     );
   }
 
