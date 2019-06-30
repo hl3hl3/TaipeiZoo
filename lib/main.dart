@@ -23,6 +23,7 @@ class StoreListPage extends StatelessWidget {
                 ),
                 Expanded(
                   child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       Text('標題'),
                       Text('說明'),
