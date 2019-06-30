@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shimmer/shimmer.dart';
+import 'package:taipei_zoo_20190630/hero_image.dart';
 import 'package:taipei_zoo_20190630/store_detail_page.dart';
 import 'package:taipei_zoo_20190630/store_list_data.dart';
 
@@ -136,12 +137,12 @@ class _StoreListPageState extends State<StoreListPage> {
     }
     Widget storeImage;
     if (storeImageUrl != null && storeImageUrl.startsWith("http")) {
-      storeImage = Image.network(
-        storeImageUrl,
-        width: 120,
-        height: 120,
-        fit: BoxFit.cover,
-      );
+      storeImage = HeroImage(
+          storeImageUrl,
+          Image.network(
+            storeImageUrl,
+            fit: BoxFit.cover,
+          ));
     } else {
       storeImage = CircularProgressIndicator();
     }
@@ -233,12 +234,14 @@ class _StoreListPageState extends State<StoreListPage> {
     }
     Widget storeImage;
     if (storeImageUrl != null && storeImageUrl.startsWith("http")) {
-      storeImage = Image.network(
-        storeImageUrl,
-        width: 120,
-        height: 120,
-        fit: BoxFit.cover,
-      );
+      storeImage = HeroImage(
+          storeImageUrl,
+          Image.network(
+            storeImageUrl,
+            width: 120,
+            height: 120,
+            fit: BoxFit.cover,
+          ));
     } else {
       storeImage = CircularProgressIndicator();
     }

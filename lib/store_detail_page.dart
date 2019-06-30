@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:taipei_zoo_20190630/hero_image.dart';
 import 'package:taipei_zoo_20190630/store_list_data.dart';
 
 class StoreDetailPage extends StatelessWidget {
@@ -24,7 +25,7 @@ class StoreDetailPage extends StatelessWidget {
       body: Container(
         child: Column(
           children: <Widget>[
-            Image.network(pageData.ePicURL),
+            HeroImage(pageData.ePicURL, Image.network(pageData.ePicURL)),
             Expanded(
               child: Padding(
                 padding: const EdgeInsets.all(16),
@@ -44,7 +45,9 @@ class StoreDetailPage extends StatelessWidget {
                 FlatButton(
                   textColor: Colors.blue,
                   splashColor: Colors.grey.shade200,
-                  child: Text("在網頁開啟",),
+                  child: Text(
+                    "在網頁開啟",
+                  ),
                   onPressed: () {
                     // TODO
                   },
