@@ -20,6 +20,7 @@ const int PAGE_ERROR = 3;
 class _StoreListPageState extends State<StoreListPage> {
   StoreListResponse _responseData;
   int _pageState = PAGE_EMPTY;
+  bool _showGrid = false;
 
   @override
   void initState() {
@@ -35,6 +36,16 @@ class _StoreListPageState extends State<StoreListPage> {
         appBar: AppBar(
           leading: Icon(Icons.menu),
           title: Text("台北市立動物園"),
+          actions: <Widget>[
+            IconButton(
+              icon: _showGrid ? Icon(Icons.list) : Icon(Icons.grid_on),
+              onPressed: () {
+                setState(() {
+                  _showGrid = !_showGrid;
+                });
+              },
+            )
+          ],
         ),
         body: _getPageBody(),
       ),
@@ -48,7 +59,7 @@ class _StoreListPageState extends State<StoreListPage> {
       case PAGE_LOADING:
         return getLoadingContent();
       case PAGE_OK:
-        return _getStoreList();
+        return _showGrid ? _getStoreGrid() : _getStoreList();
       case PAGE_ERROR:
       default:
         return getErrorContent();
@@ -85,6 +96,89 @@ class _StoreListPageState extends State<StoreListPage> {
     setState(() {
       _pageState = PAGE_ERROR;
     });
+  }
+
+  GridView _getStoreGrid() {
+    return GridView.builder(
+      itemCount: _responseData == null ? 0 : _responseData.result.count,
+      padding: EdgeInsets.all(8),
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 2,
+        childAspectRatio: 0.72,
+        crossAxisSpacing: 4,
+        mainAxisSpacing: 4,
+      ),
+      itemBuilder: (BuildContext context, int index) {
+        var storeImageUrl;
+        var storeTitle = '';
+        var storeInfo = '';
+        var storeMemo = '';
+        if (_responseData != null) {
+          StoreListItem itemData = _responseData.result.results[index];
+          storeImageUrl = itemData.ePicURL;
+          storeTitle = itemData.eName;
+          storeInfo = itemData.eInfo;
+          storeMemo = itemData.eMemo == null || itemData.eMemo == ''
+              ? "無休館資訊"
+              : itemData.eMemo;
+        }
+        Widget storeImage;
+        if (storeImageUrl != null && storeImageUrl.startsWith("http")) {
+          storeImage = Image.network(
+            storeImageUrl,
+            width: 120,
+            height: 120,
+            fit: BoxFit.cover,
+          );
+        } else {
+          storeImage = CircularProgressIndicator();
+        }
+
+        return Card(
+          elevation: 4,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8),
+          ),
+          clipBehavior: Clip.antiAlias,
+          child: Column(
+            children: <Widget>[
+              AspectRatio(
+                aspectRatio: 1.5,
+                child: storeImage,
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text(
+                      storeTitle,
+                      style: TextStyle(fontSize: 18),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    SizedBox(height: 8),
+                    Text(
+                      storeInfo,
+                      style: TextStyle(fontSize: 14),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    SizedBox(height: 8),
+                    Text(
+                      storeMemo,
+                      style: TextStyle(fontSize: 14),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
   }
 
   ListView _getStoreList() {
