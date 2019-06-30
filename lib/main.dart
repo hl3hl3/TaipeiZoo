@@ -43,14 +43,14 @@ class _StoreListPageState extends State<StoreListPage> {
   Widget _getPageBody() {
     switch (_pageState) {
       case PAGE_EMPTY:
-        return Text("empty");
+        return getEmptyContent();
       case PAGE_LOADING:
         return Text("loading");
       case PAGE_OK:
         return _getStoreList();
       case PAGE_ERROR:
       default:
-        return Text("error");
+        return getErrorContent();
     }
   }
 
@@ -161,5 +161,47 @@ class _StoreListPageState extends State<StoreListPage> {
         );
       },
     );
+  }
+
+
+  Widget getEmptyContent() {
+    return Container(
+        color: Colors.grey.shade200,
+        alignment: Alignment.center,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Text(
+              "╮(╯∀╰)╭",
+              style: TextStyle(fontSize: 42, fontWeight: FontWeight.bold),
+            ),
+            SizedBox(height: 16),
+            Text(
+              "沒有資料",
+              style: Theme.of(context).textTheme.title,
+            ),
+          ],
+        ));
+  }
+
+  Widget getErrorContent() {
+    return Container(
+        color: Colors.grey.shade200,
+        alignment: Alignment.center,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Text(
+              "╮(╯_╰)╭",
+              style: TextStyle(fontSize: 42, fontWeight: FontWeight.bold),
+            ),
+            SizedBox(height: 16),
+            Text(
+              "發生錯誤\n請稍後再試",
+              textAlign: TextAlign.center,
+              style: Theme.of(context).textTheme.title,
+            ),
+          ],
+        ));
   }
 }
