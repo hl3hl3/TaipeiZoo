@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
@@ -23,7 +25,8 @@ class StoreListPage extends StatelessWidget {
     var url = 'https://data.taipei/opendata/datalist/apiAccess?scope=resourceAquire&rid=5a0e5fbb-72f8-41c6-908e-2fb25eff9b8a';
     var response = await http.get(url);
     print('Response status: ${response.statusCode}');
-    print('Response body: ${response.body}');
+    var resultUtf8 = Utf8Decoder().convert(response.bodyBytes);
+    print('Response body resultUtf8: ${resultUtf8}');
   }
 
   ListView _getStoreList() {
