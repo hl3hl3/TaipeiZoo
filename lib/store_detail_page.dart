@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:taipei_zoo_20190630/hero_image.dart';
 import 'package:taipei_zoo_20190630/store_list_data.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class StoreDetailPage extends StatelessWidget {
   StoreListItem pageData;
@@ -48,8 +49,8 @@ class StoreDetailPage extends StatelessWidget {
                   child: Text(
                     "在網頁開啟",
                   ),
-                  onPressed: () {
-                    // TODO
+                  onPressed: () async {
+                    await _showInBrowser(context);
                   },
                 ),
               ],
@@ -58,5 +59,16 @@ class StoreDetailPage extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Future _showInBrowser(BuildContext context) async {
+     String url = pageData.eURL;
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      final snackBar =
+          SnackBar(content: Text('無法開啟 $url'));
+      Scaffold.of(context).showSnackBar(snackBar);
+    }
   }
 }
