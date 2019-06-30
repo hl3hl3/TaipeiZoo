@@ -49,7 +49,7 @@ class _StoreListPageState extends State<StoreListPage> {
 
   ListView _getStoreList() {
     return ListView.separated(
-      itemCount: 10,
+      itemCount: _responseData == null ? 0 : _responseData.result.count,
       separatorBuilder: (BuildContext context, int index) {
         return Divider(
           height: 2,
