@@ -74,49 +74,51 @@ class _StoreListPageState extends State<StoreListPage> {
           storeImage = Image.network(
             storeImageUrl,
             width: 120,
+            height: 120,
+            fit: BoxFit.cover,
           );
         } else {
           storeImage = CircularProgressIndicator();
         }
 
-        return Row(
-          children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-              child: storeImage,
-            ),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Text(
-                    storeTitle,
-                    style: TextStyle(fontSize: 18),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
+        return Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          child: Row(
+            children: <Widget>[
+              storeImage,
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 12, right: 8),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Text(
+                        storeTitle,
+                        style: TextStyle(fontSize: 18),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      SizedBox(height: 8),
+                      Text(
+                        storeInfo,
+                        style: TextStyle(fontSize: 14),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      SizedBox(height: 8),
+                      Text(
+                        storeMemo,
+                        style: TextStyle(fontSize: 14),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ],
                   ),
-                  SizedBox(height: 8),
-                  Text(
-                    storeInfo,
-                    style: TextStyle(fontSize: 14),
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  SizedBox(height: 8),
-                  Text(
-                    storeMemo,
-                    style: TextStyle(fontSize: 14),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ],
+                ),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(right: 16),
-              child: Icon(Icons.arrow_forward_ios),
-            ),
-          ],
+              Icon(Icons.arrow_forward_ios),
+            ],
+          ),
         );
       },
     );
